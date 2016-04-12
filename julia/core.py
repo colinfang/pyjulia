@@ -335,7 +335,7 @@ class Julia(object):
         management. It should never be used for returning the result of Julia
         expressions, only to execute statements.
         """
-        # self._debug("_call(%s)" % src)
+        self._debug("_call(%s)" % src)
         ans = self.api.jl_eval_string(src.encode('utf-8'))
         self.check_exception(src)
 
@@ -381,7 +381,9 @@ class Julia(object):
 
         if res is None:
             self.check_exception("convert(PyCall.PyObject, %s)" % src)
+            self._debug('Need to return None.')
         if res == 0:
+            self._debug('How can res == 0?')
             return None
         boxed_obj = self.api.jl_get_field(void_p(res), b'o')
         pyobj = self.api.jl_unbox_voidpointer(void_p(boxed_obj))
